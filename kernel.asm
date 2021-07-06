@@ -2,12 +2,43 @@ org 0x7e00
 jmp 0x0000:start
 
 data:
+    ans0 db 'a',13,10,0
+    ans1 db 'b',13,10,0
+    ans2 db 'c',13,10,0
+    ans3 db 'a',13,10,0
+    ans4 db 'b',13,10,0
+    ans5 db 'c',13,10,0
+    ans6 db 'a',13,10,0
+    ans7 db 'b',13,10,0
+    ans8 db 'c',13,10,0
+    ans9 db 'a',13,10,0
+
+    check0 db 0
+    check1 db 0
+    check2 db 0
+    check3 db 0
+    check4 db 0
+    check5 db 0
+    check6 db 0
+    check7 db 0
+    check8 db 0
+    check9 db 0
+    
     random_chosen db 0
-    ans db 'a',13, 10, 0 
+    questionAns db 0
 
     endl db ' ', 13, 10, 0
 
     q0 db '   Qual eh o resultado de 1+1?      ',13,10,0
+    q1 db '   Qual eh o resultado de 2+2?      ',13,10,0
+    q2 db '   Qual eh o resultado de 3+3?      ',13,10,0
+    q3 db '   Qual eh o resultado de 4+4?      ',13,10,0
+    q4 db '   Qual eh o resultado de 5+5?      ',13,10,0
+    q5 db '   Qual eh o resultado de 6+6?      ',13,10,0
+    q6 db '   Qual eh o resultado de 7+7?      ',13,10,0
+    q7 db '   Qual eh o resultado de 8+8?      ',13,10,0
+    q8 db '   Qual eh o resultado de 9+9?      ',13,10,0
+    q9 db '   Qual eh o resultado de 10+10?    ',13,10,0
 
     cow0 db '            \   ^__^             ',13,10,0
     cow1 db '             \  (oo)\_______     ',13,10,0
@@ -23,6 +54,8 @@ data:
     cow8 db '                    ||----w |    ',13,10,0
     cow9 db '                    ||     ||    ',13,10,0
 
+    rst db '   Aperte SPACE para recomecar   ',13,10,0
+
     ac db '  Resposta correta! Tu mandou bem',13,10,0
 
     cow10 db '            \   ^__^             ',13,10,0
@@ -30,8 +63,20 @@ data:
     cow12 db '                (__)\       )\/\ ',13,10,0
     cow13 db '                    ||----w |    ',13,10,0
     cow14 db '                    ||     ||    ',13,10,0
+
+    nxt db ' Aperte SPACE para proxima questao',13,10,0
     
-    res1 db '        a. 1     b. 2     c. 3   ',13,10,0
+    res0 db '        a. 2     b. 1     c. 3   ',13,10,0
+    res1 db '        a. 1     b. 4     c. 3   ',13,10,0
+    res2 db '        a. 1     b. 2     c. 6   ',13,10,0
+    res3 db '        a. 8     b. 2     c. 3   ',13,10,0
+    res4 db '        a. 1     b. 10     c. 3  ',13,10,0
+    res5 db '        a. 1     b. 2     c. 12  ',13,10,0
+    res6 db '        a. 14     b. 2     c. 3  ',13,10,0
+    res7 db '        a. 1     b. 16     c. 3  ',13,10,0
+    res8 db '        a. 1     b. 2     c. 18  ',13,10,0
+    res9 db '        a. 20     b. 2     c. 3  ',13,10,0
+    
     ;Dados do projeto...
 
 video_mode:
@@ -83,6 +128,7 @@ get_string:
     call print_string
     ret
 
+
 random_number:
     random_start:
         mov AH, 00h  ; interru  pts to get system time        
@@ -97,80 +143,166 @@ random_number:
         mov byte[random_chosen], dl
     ret
 
+%macro question 3
+    call video_mode
+
+    mov si, endl
+    call print_string
+    mov si, endl
+    call print_string    
+    mov si, endl
+    call print_string
+    mov si, endl
+    call print_string
+    mov si, endl
+    call print_string
+    mov si, endl
+    call print_string
+
+    mov si, %1
+    call print_string
+
+    mov si, endl
+    call print_string
+
+    mov si, cow0
+    call print_string
+    mov si, cow1
+    call print_string
+    mov si, cow2
+    call print_string
+    mov si, cow3
+    call print_string
+    mov si, cow4
+    call print_string
+
+    mov si, endl
+    call print_string
+    mov si, endl
+    call print_string
+    mov si, endl
+    call print_string
+    
+    mov si, %2
+    call print_string
+
+    mov ax, [%3]
+    mov [questionAns], ax
+    call compare
+%endmacro
+
 move_random:
     cmp byte[random_chosen], 0
-    je .sub0
+    jne .if0
+        cmp byte[check0], 0
+        je .question0
+        call random_number
+        call move_random
+    .if0:
     cmp byte[random_chosen], 1
-    je .sub1
+    jne .if1
+        cmp byte[check1], 0
+        je .question1
+        call random_number
+        call move_random
+    .if1:
     cmp byte[random_chosen], 2
-    je .sub2
+    jne .if2
+        cmp byte[check2], 0
+        je .question2
+        call random_number
+        call move_random
+    .if2:
     cmp byte[random_chosen], 3
-    je .sub3
+    jne .if3
+        cmp byte[check3], 0
+        je .question3
+        call random_number
+        call move_random
+    .if3:
     cmp byte[random_chosen], 4
-    je .sub4
+    jne .if4
+        cmp byte[check4], 0
+        je .question4
+        call random_number
+        call move_random
+    .if4:
     cmp byte[random_chosen], 5
-    je .sub5
+    jne .if5
+        cmp byte[check5], 0
+        je .question5
+        call random_number
+        call move_random
+        ret
+    .if5:
     cmp byte[random_chosen], 6
-    je .sub6
+    jne .if6
+        cmp byte[check6], 0
+        je .question6
+        call random_number
+        call move_random
+    .if6:
     cmp byte[random_chosen], 7
-    je .sub7
+    jne .if7
+        cmp byte[check7], 0
+        je .question7
+        call random_number
+        call move_random
+    .if7:
     cmp byte[random_chosen], 8
-    je .sub8
+    jne .if8
+        cmp byte[check8], 0
+        je .question8
+        call random_number
+        call move_random
+    .if8:
     cmp byte[random_chosen], 9
-    je .sub9
-    ret
-    .sub0:
-        mov al, '0'
-        call put_char
-        ret
-    .sub1:
-        mov al, '1'
-        call put_char
-        ret
-    .sub2:
-        mov al, '2'
-        call put_char
-        ret
-    .sub3:
-        mov al, '3'
-        call put_char
-        ret
-    .sub4:
-        mov al, '4'
-        call put_char
-        ret
-    .sub5:
-        mov al, '5'
-        call put_char
-        ret
-    .sub6:
-        mov al, '6'
-        call put_char
-        ret
-    .sub7:
-        mov al, '7'
-        call put_char
-        ret
-    .sub8:
-        mov al, '8'
-        call put_char
-        ret
-    .sub9:
-        mov al, '9'
-        call put_char
-        ret 
-    ret
+    jne .if9
+        cmp byte[check9], 0
+        je .question9
+        call random_number
+        call move_random
+    .if9:
+    ret;podemos inserir aqui a função da tela de vitória
+    .question0:
+        mov byte[check0], 1
+        question q0, res0, ans0
+    .question1:
+        mov byte[check1], 1
+        question q1, res1, ans1
+    .question2:
+        mov byte[check2], 1
+        question q2, res2, ans2        
+    .question3:
+        mov byte[check3], 1
+        question q3, res3, ans3    
+    .question4:
+        mov byte[check4], 1
+        question q4, res4, ans4   
+    .question5:
+        mov byte[check5], 1
+        question q5, res5, ans5       
+    .question6:
+        mov byte[check6], 1
+        question q6, res6, ans6          
+    .question7:
+        mov byte[check7], 1
+        question q7, res7, ans7     
+    .question8:
+        mov byte[check8], 1
+        question q8, res8, ans8    
+    .question9:
+        mov byte[check9], 1
+        question q9, res9, ans9       
 
 compare:
     mov ah, 0x00 ;número da chamada para ler um caractere do buffer do teclado e remover ele de lá
-    int 16h ;
-    cmp al, [ans]
+    int 16h
+    cmp al, [questionAns]
     je .end
     call incorrect
-    ret
     .end:
         call correct
-        ret
 
 correct:
     call video_mode
@@ -205,11 +337,27 @@ correct:
     mov si, cow14
     call print_string
 
-    ret
+    mov si, endl
+    call print_string
+    mov si, endl
+    call print_string
+
+    mov si, nxt
+    call print_string
+
+    .loop:
+        call read_char
+        cmp al, 32
+        je .end
+        jmp .loop
+    .end:
+        ;incrementar o contador de acertos
+        call random_number
+        call move_random
 
 incorrect:
     call video_mode
-    
+
     mov si, endl
     call print_string
     mov si, endl
@@ -240,60 +388,32 @@ incorrect:
     mov si, cow9
     call print_string
 
-    ret
+    mov si, endl
+    call print_string
+    mov si, endl
+    call print_string
+
+    mov si, rst
+    call print_string
+
+    .loop:
+        call read_char
+        cmp al, 32
+        je .end
+        jmp .loop
+    .end:
+        ;zerar as flags e o contador de acertos
+        call random_number
+        call move_random
 
 start:
     xor ax, ax
     mov ds, ax
     mov es, ax
-    
-    ;Código do projeto...
 
     call video_mode
 
     call random_number
     call move_random
-
-    mov si, endl
-    call print_string
-    mov si, endl
-    call print_string    
-    mov si, endl
-    call print_string
-    mov si, endl
-    call print_string
-    mov si, endl
-    call print_string
-    mov si, endl
-    call print_string
-
-    mov si, q0
-    call print_string
-
-    mov si, endl
-    call print_string
-
-    mov si, cow0
-    call print_string
-    mov si, cow1
-    call print_string
-    mov si, cow2
-    call print_string
-    mov si, cow3
-    call print_string
-    mov si, cow4
-    call print_string
-
-    mov si, endl
-    call print_string
-    mov si, endl
-    call print_string
-    mov si, endl
-    call print_string
-    
-    mov si, res1
-    call print_string
-
-    call compare
     
 jmp $
