@@ -171,6 +171,10 @@ reset_all: ;As flags atreladas as questões são zeradas e o contador de acertos
     mov byte[check8], 0
     mov byte[check9], 0
     mov byte[counter], 0
+    
+    xor ax, ax
+    mov ds, ax
+    mov es, ax
     ret
 
 compare:
