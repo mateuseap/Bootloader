@@ -117,7 +117,7 @@ video_mode:
     mov al, 13h
     int 10h
 
-    mov ah, 0xb ;escolhe a cor da tela
+    mov ah, 0xb
     mov bh, 0 
     mov bl, 15 ;cor da fonte
     int 10h
