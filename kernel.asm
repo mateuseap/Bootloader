@@ -143,22 +143,6 @@ print_string:
     .endloop:
     ret
 
-get_string:
-    mov al, 0
-    .for:
-        call read_char
-        stosb ;guarda o que está em al
-        cmp al, 13 ;checa se chegou no 'enter'
-        je .fim
-        call put_char
-        jmp .for
-     .fim:
-    dec di
-    mov al, 0
-    stosb
-    printf endl
-    ret
-
 reset_all: ;As flags atreladas as questões são zeradas e o contador de acertos também é zerado
     mov byte[check0], 0
     mov byte[check1], 0
