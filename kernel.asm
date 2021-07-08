@@ -1,5 +1,5 @@
-org 0x7e00
-jmp 0x0000:start
+org 0x7e00 ;endereço de memória que vai começar
+jmp 0x0000:start ;começo do disco:"main" da linguagem de alto nível
 
 data:
     ans0 db 'a',13,10,0
@@ -113,11 +113,11 @@ data:
 %endmacro
 
 video_mode:
-    mov ah, 0h 
+    mov ah, 0h ;escolhe o modo de vídeo
     mov al, 13h
     int 10h
 
-    mov ah, 0xb 
+    mov ah, 0xb ;escolhe a cor da tela
     mov bh, 0 
     mov bl, 15 ;cor da fonte
     int 10h
